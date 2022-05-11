@@ -61,7 +61,6 @@ function MazeContainer() {
 
     const playAudio = () => {
         let randInt = Math.floor(Math.random() * 4) + 1;
-        console.log('randInt', randInt);
         var audio = new Audio(`/audio/arroto_${randInt}.mp3`);
         audio.play();
     }
