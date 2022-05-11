@@ -1,70 +1,71 @@
-# Getting Started with Create React App
+# Maze Runner
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este projeto é uma tarefa de aula de algoritmos avançadaos.
 
-## Available Scripts
+## Faça um ratinho sair do labirinto
 
-In the project directory, you can run:
+Dado um array de 2 dimensões contendo os seguintes caracteres
 
-### `npm start`
+* '.' = espaço vazio
+* '#' = parede
+* 'S' = posição inicial (6,1)
+* 'E' = saída (0,30) 
+* 'C' = queijo (2,2)/(5,22)/(6,9)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```
+  0         1         2         3
+  0123456789012345678901234567890123456
+0 #################################E###
+1 ###....#.....#......###...#...#...#.#
+2 #.C.##...###...####.....#..##.#.##..#
+3 #.#########.###....##.####.##.#.#..##
+4 #.............##.######..#......#...#
+5 #####.#####.#..........C.##########.#
+6 #S.......C..###.#.#.##..............#
+7 #####################################
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Objetivos
+Desenvolver uma aplicação que responda (colocadas aqui em ordem de dificuldade):
 
-### `npm test`
+1. É possível chegar a uma saída? (Sim ou Não)
+2. Quantos passos são necessários para chegar a saída seguindo o caminho mais curto?
+3. Imprimir o caminho que foi seguido para chegar a saída
+4. Criar os testes unitários para os objetos usados
+5. Comer todo queijo possível (o rato deve arrotar toda vez que comer um queijo)
+5. Apresentar o labirinto e demais objetos de cena graficamente
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Alcançando a saída
 
-### `npm run build`
+O problema deve ser tratado como um grafo (graph) onde os elementos 'S', 'E' e '.' devem ser tratados como vértices (vertex). Cada vértice adjacente é conectado por uma aresta (edge). O problema deve ser resolvido usando busca em largura (breadth[first search ou BFS)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Dado que o grafo está implicitamente informado pela matriz de caracteres armazenada no labirinto, precisamos apenas de uma estrutura adicional para controlar as visitas (color matrix):
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+int color[num_rows][num_columns];
+    * white = um vértice não visitado (ainda não está na fila)
+    * gray  = um vértice aguardando na fila (queue)
+    * black = um vértice finalizado (já visitado  não está mais na fila) 
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+No início todos os vértices são brancos. Quando eles entram na fila de processamento se 
 
-### `npm run eject`
+tornam cinza, e viram preto quando saem da fila (dequeue)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```
+for row from 0 to num_rows[1 {
+  for column from 0 to num_columns[1 {
+    color[row][column] = white;
+  }
+}
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+A fila de processamento deve ser inicializada com a entrada 'S' do labirinto:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+q = new queue();
+q.enqueue(start_row,start_column);
+color[start_row][start_column] = gray;
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Enquanto a fila não estiver vazia, realizamos a procura BFS.
