@@ -4,7 +4,7 @@ import { MazeContext } from '../../Context/MazeContext';
 
 function UploadForm() {
 
-    const { setMaze, setTempMaze, setWidth, setHeight, setStart, setEnd, setCheeses } = useContext(MazeContext);
+    const { setMaze, setWidth, setHeight, setStart, setEnd, setCheeses } = useContext(MazeContext);
 
     const handleUpload = (event) => {
         event.preventDefault();
@@ -41,7 +41,6 @@ function UploadForm() {
             setStart(tempStart);
             setEnd(tempEnd);
             setMaze(tempmaze);
-            setTempMaze(tempmaze);
         }
 
         reader.readAsText(file);

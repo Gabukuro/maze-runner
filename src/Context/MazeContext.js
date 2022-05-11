@@ -15,6 +15,7 @@ export const MazeContext = createContext({
     setEnd: () => {},
     cheeses: [],
     setCheeses: () => {},
+    resetMaze: () => {},
 });
 
 export const MazeProvider = ({ children }) => {
@@ -27,8 +28,14 @@ export const MazeProvider = ({ children }) => {
     const [end, setEnd] = React.useState({ x: 0, y: 0 });
     const [cheeses, setCheeses] = React.useState([]);
 
+
     useEffect(() => {
-    }, [maze])
+        setTempMaze(maze);
+    }, [maze, tempMaze])
+
+    const resetMaze = () => {
+        setTempMaze(maze);
+    }
 
     return (
         <MazeContext.Provider
@@ -47,6 +54,7 @@ export const MazeProvider = ({ children }) => {
                 setEnd,
                 cheeses,
                 setCheeses,
+                resetMaze
             }}
         >
             {children}

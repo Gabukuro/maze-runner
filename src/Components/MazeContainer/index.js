@@ -7,15 +7,16 @@ import './style.css';
 
 function MazeContainer() {
 
-    const { tempMaze, setTempMaze, start, end } = useContext(MazeContext);
-    const [ currentLocation, setCurrentLocation ] = useState({ x: start.x, y: start.y });
+    const { resetMaze, tempMaze, setTempMaze, start, end } = useContext(MazeContext);
+    const [currentLocation, setCurrentLocation] = useState({ x: start.x, y: start.y });
 
     useEffect(() => {
-    }, [currentLocation]);
+        console.log('changed', tempMaze)
+    }, [currentLocation, tempMaze]);
 
     const renderMaze = () => {
-        return tempMaze.map(row => {
-            return <span className="row" key={row.toString()}>
+        return tempMaze.map((row, index) => {
+            return <span className="row" key={index}>
                 {row.map((cell, index) => {
                     return <img key={index} src={`/images/${parseCell(cell)}.png`} alt={`${parseCell(cell)}`} width={20} />
                 })}
@@ -43,12 +44,12 @@ function MazeContainer() {
 
         solution.forEach((move, index) => {
             setTimeout(() => {
-                if(index !== 0) {
+                if (index !== 0) {
                     let lastMove = solution[index - 1];
                     tempMaze[lastMove[0]][lastMove[1]] = 'X';
                 }
 
-                if(tempMaze[move[0]][move[1]] == 'C') {
+                if (tempMaze[move[0]][move[1]] === 'C') {
                     playAudio();
                 }
 
@@ -66,20 +67,32 @@ function MazeContainer() {
     }
 
     return (
-        <>
-            <div className="maze-container">
-                {tempMaze.length > 0 && renderMaze()}
-            </div>
+        tempMaze.length > 0 && (
+            <>
+                <div className="maze-container">
+                    {tempMaze.length > 0 && renderMaze()}
+                </div>
 
-            <Button
-                variant="contained"
-                component="label"
-                sx={{ mt: 3 }}
-                onClick={() => solveMaze()}
-            >
-                Solve Maze
-            </Button>
-        </>
+                <Button
+                    variant="contained"
+                    component="label"
+                    sx={{ mt: 3 }}
+                    onClick={() => solveMaze()}
+                >
+                    Solve Maze
+                </Button>
+
+                <Button
+                    color="error"
+                    variant="contained"
+                    component="label"
+                    sx={{ mt: 3, ml: 3 }}
+                    onClick={() => resetMaze()}
+                >
+                    Reset Maze
+                </Button>
+            </>
+        )
     )
 }
 
